@@ -94,8 +94,9 @@ sudo rm /var/www/antfarm.online/info.php
 
 # สร้างฐานข้อมูลและผู้ใช้ใหม่ใน MySQL
 sudo mysql -e "CREATE DATABASE example_database;"
-sudo mysql -e "CREATE USER 'example_user'@'%' IDENTIFIED BY 'password';"
-sudo mysql -e "GRANT ALL ON example_database.* TO 'example_user'@'%';"
+sudo mysql -e "CREATE USER 'example_user'@'localhost' IDENTIFIED BY 'password';"
+sudo mysql -e "GRANT ALL PRIVILEGES ON example_database.* TO 'example_user'@'localhost' WITH GRANT OPTION;"
+sudo mysql -e "FLUSH PRIVILEGES;"
 
 # สร้างสคริปต์ PHP เพื่อทดสอบการเชื่อมต่อฐานข้อมูล
 tee /var/www/antfarm.online/todo_list.php > /dev/null <<EOF
