@@ -71,35 +71,37 @@ EOF
 echo "กรุณาทดสอบการติดตั้ง PHP โดยเข้าถึง URL: http://192.168.56.103/info.php"
 
 # ลบไฟล์ทดสอบ PHP เพื่อความปลอดภัย
-sudo rm /var/www/html/info.php
+#sudo rm /var/www/html/info.php
 
+# ข้ามขั้นตอนการสร้างฐานข้อมูลและผู้ใช้ใหม่ใน MySQL
 # สร้างฐานข้อมูลและผู้ใช้ใหม่ใน MySQL
-sudo mysql -u root -pSbkcrona -e "CREATE DATABASE example_database;"
-sudo mysql -u root -pSbkcrona -e "CREATE USER 'example_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';"
-sudo mysql -u root -pSbkcrona -e "GRANT ALL PRIVILEGES ON example_database.* TO 'example_user'@'localhost' WITH GRANT OPTION;"
-sudo mysql -u root -pSbkcrona -e "FLUSH PRIVILEGES;"
+# sudo mysql -u root -pSbkcrona -e "CREATE DATABASE example_database;"
+# sudo mysql -u root -pSbkcrona -e "CREATE USER 'example_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';"
+# sudo mysql -u root -pSbkcrona -e "GRANT ALL PRIVILEGES ON example_database.* TO 'example_user'@'localhost' WITH GRANT OPTION;"
+# sudo mysql -u root -pSbkcrona -e "FLUSH PRIVILEGES;"
 
+# ข้ามขั้นตอนการสร้างสคริปต์ PHP เพื่อทดสอบการเชื่อมต่อฐานข้อมูล
 # สร้างสคริปต์ PHP เพื่อทดสอบการเชื่อมต่อฐานข้อมูลในไดเร็กทอรีเริ่มต้น
-tee /var/www/html/todo_list.php > /dev/null <<EOF
-<?php
-\$user = "example_user";
-\$password = "password";
-\$database = "example_database";
-\$table = "todo_list";
+# tee /var/www/html/todo_list.php > /dev/null <<EOF
+# <?php
+# \$user = "example_user";
+# \$password = "password";
+# \$database = "example_database";
+# \$table = "todo_list";
 
-try {
-    \$db = new PDO("mysql:host=localhost;dbname=\$database", \$user, \$password);
-    echo "<h2>TODO</h2><ol>";
-    foreach(\$db->query("SELECT content FROM \$table") as \$row) {
-        echo "<li>" . \$row['content'] . "</li>";
-    }
-    echo "</ol>";
-} catch (PDOException \$e) {
-    print "Error!: " . \$e->getMessage() . "<br/>";
-    die();
-}
-?>
-EOF
+# try {
+#     \$db = new PDO("mysql:host=localhost;dbname=\$database", \$user, \$password);
+#     echo "<h2>TODO</h2><ol>";
+#     foreach(\$db->query("SELECT content FROM \$table") as \$row) {
+#         echo "<li>" . \$row['content'] . "</li>";
+#     }
+#     echo "</ol>";
+# } catch (PDOException \$e) {
+#     print "Error!: " . \$e->getMessage() . "<br/>";
+#     die();
+# }
+# ?>
+# EOF
 
-# ทดสอบการเชื่อมต่อฐานข้อมูลโดยเข้าถึง URL http://192.168.56.103/todo_list.php
-echo "กรุณาทดสอบการเชื่อมต่อฐานข้อมูลโดยเข้าถึง URL: http://192.168.56.103/todo_list.php"
+# ข้ามขั้นตอนการทดสอบการเชื่อมต่อฐานข้อมูลโดยเข้าถึง URL http://192.168.56.103/todo_list.php
+# echo "กรุณาทดสอบการเชื่อมต่อฐานข้อมูลโดยเข้าถึง URL: http://192.168.56.103/todo_list.php"
