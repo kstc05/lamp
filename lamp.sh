@@ -8,44 +8,11 @@ sudo apt install -y apache2
 sudo ufw allow in "Apache"
 
 # ติดตั้ง MySQL
-sudo apt install -y mysql-server expect
+sudo apt install -y mysql-server
 
-# แก้ปัญหาการตั้งค่าความปลอดภัยของ MySQL และตั้งรหัสผ่าน Root เป็น 'Sbkcrona'
-sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Sbkcrona'; FLUSH PRIVILEGES;"
-
-# สร้างสคริปต์ expect สำหรับ mysql_secure_installation
-tee mysql_secure_installation.expect > /dev/null <<EOF
-#!/usr/bin/expect -f
-
-set timeout 10
-spawn sudo mysql_secure_installation
-
-expect "Enter password for user root:"
-send "Sbkcrona\r"
-
-expect "Change the password for root ? ((Press y|Y for Yes, any other key for No) :"
-send "n\r"
-
-expect "Remove anonymous users? (Press y|Y for Yes, any other key for No) :"
-send "y\r"
-
-expect "Disallow root login remotely? (Press y|Y for Yes, any other key for No) :"
-send "y\r"
-
-expect "Remove test database and access to it? (Press y|Y for Yes, any other key for No) :"
-send "y\r"
-
-expect "Reload privilege tables now? (Press y|Y for Yes, any other key for No) :"
-send "n\r"
-
-expect eof
-EOF
-
-# รันสคริปต์ expect สำหรับ mysql_secure_installation
-sudo expect mysql_secure_installation.expect
-
-# ลบสคริปต์ expect หลังการใช้งาน
-rm mysql_secure_installation.expect
+# ตั้งรหัสผ่าน Root เป็น 'Sbkcrona' และปรับวิธีการยืนยันตัวตน
+sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Sbkcrona';"
+sudo mysql -e "FLUSH PRIVILEGES;"
 
 # ติดตั้ง PHP และโมดูลที่จำเป็น
 sudo apt install -y php libapache2-mod-php php-mysql
