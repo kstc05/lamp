@@ -47,6 +47,9 @@ sudo expect mysql_secure_installation.expect
 # ลบสคริปต์ expect หลังการใช้งาน
 rm mysql_secure_installation.expect
 
+# เปลี่ยนการตั้งค่าการรับรองความถูกต้องของ root เป็น mysql_native_password
+sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Sbkcrona'; FLUSH PRIVILEGES;"
+
 # ติดตั้ง PHP และโมดูลที่จำเป็น
 sudo apt install -y php libapache2-mod-php php-mysql
 
@@ -71,7 +74,7 @@ EOF
 echo "กรุณาทดสอบการติดตั้ง PHP โดยเข้าถึง URL: http://192.168.56.103/info.php"
 
 # ลบไฟล์ทดสอบ PHP เพื่อความปลอดภัย
-#sudo rm /var/www/html/info.php
+sudo rm /var/www/html/info.php
 
 # ติดตั้ง phpMyAdmin
 sudo apt install -y phpmyadmin
