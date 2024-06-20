@@ -11,7 +11,7 @@ sudo ufw allow in "Apache"
 sudo apt install -y mysql-server expect
 
 # แก้ปัญหาการตั้งค่าความปลอดภัยของ MySQL และตั้งรหัสผ่าน Root เป็น 'Sbkcrona'
-sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Sbkcrona';"
+sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Sbkcrona'; FLUSH PRIVILEGES;"
 
 # สร้างสคริปต์ expect สำหรับ mysql_secure_installation
 tee mysql_secure_installation.expect > /dev/null <<EOF
@@ -36,7 +36,7 @@ expect "Remove test database and access to it? (Press y|Y for Yes, any other key
 send "y\r"
 
 expect "Reload privilege tables now? (Press y|Y for Yes, any other key for No) :"
-send "y\r"
+send "n\r"
 
 expect eof
 EOF
