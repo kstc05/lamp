@@ -8,11 +8,44 @@ sudo apt install -y apache2
 sudo ufw allow in "Apache"
 
 # ติดตั้ง MySQL
-sudo apt install -y mysql-server
+sudo apt install -y mysql-server expect
 
-# ตั้งรหัสผ่าน Root เป็น 'Sbkcrona' และปรับวิธีการยืนยันตัวตน
-sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Sbkcrona';"
-sudo mysql -e "FLUSH PRIVILEGES;"
+# สร้างสคริปต์ expect สำหรับ mysql_secure_installation
+tee mysql_secure_installation.expect > /dev/null <<EOF
+#!/usr/bin/expect -f
+
+set timeout 10
+spawn sudo mysql_secure_installation
+
+expect "Enter password for user root:"
+send "Sbkcrona\r"
+
+expect "VALIDATE PASSWORD COMPONENT can be used to test passwords and improve security. It checks the strength of password and allows the users to set only those passwords which are secure enough. Would you like to setup VALIDATE PASSWORD component?"
+send "n\r"
+
+expect "Change the password for root ? ((Press y|Y for Yes, any other key for No) :)"
+send "n\r"
+
+expect "Remove anonymous users? (Press y|Y for Yes, any other key for No) :)"
+send "y\r"
+
+expect "Disallow root login remotely? (Press y|Y for Yes, any other key for No) :)"
+send "y\r"
+
+expect "Remove test database and access to it? (Press y|Y for Yes, any other key for No) :)"
+send "y\r"
+
+expect "Reload privilege tables now? (Press y|Y for Yes, any other key for No) :)"
+send "y\r"
+
+expect eof
+EOF
+
+# รันสคริปต์ expect สำหรับ mysql_secure_installation
+sudo expect mysql_secure_installation.expect
+
+# ลบสคริปต์ expect หลังการใช้งาน
+rm mysql_secure_installation.expect
 
 # ติดตั้ง PHP และโมดูลที่จำเป็น
 sudo apt install -y php libapache2-mod-php php-mysql
@@ -60,10 +93,10 @@ echo "กรุณาทดสอบการติดตั้ง PHP โดย
 sudo rm /var/www/antfarm.online/info.php
 
 # สร้างฐานข้อมูลและผู้ใช้ใหม่ใน MySQL
-sudo mysql -e "CREATE DATABASE example_database;"
-sudo mysql -e "CREATE USER 'example_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';"
-sudo mysql -e "GRANT ALL PRIVILEGES ON example_database.* TO 'example_user'@'localhost' WITH GRANT OPTION;"
-sudo mysql -e "FLUSH PRIVILEGES;"
+sudo mysql -u root -pSbkcrona -e "CREATE DATABASE example_database;"
+sudo mysql -u root -pSbkcrona -e "CREATE USER 'example_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';"
+sudo mysql -u root -pSbkcrona -e "GRANT ALL PRIVILEGES ON example_database.* TO 'example_user'@'localhost' WITH GRANT OPTION;"
+sudo mysql -u root -pSbkcrona -e "FLUSH PRIVILEGES;"
 
 # สร้างสคริปต์ PHP เพื่อทดสอบการเชื่อมต่อฐานข้อมูล
 tee /var/www/antfarm.online/todo_list.php > /dev/null <<EOF
