@@ -60,37 +60,18 @@ EOF
 # รีโหลด Apache เพื่อให้การเปลี่ยนแปลงมีผล
 sudo systemctl reload apache2
 
-# สร้างไดเร็กทอรีสำหรับเว็บไซต์
-sudo mkdir /var/www/antfarm.online
-sudo chown -R $USER:$USER /var/www/antfarm.online
-
-# สร้างไฟล์คอนฟิก Virtual Host
-sudo tee /etc/apache2/sites-available/antfarm.online.conf > /dev/null <<EOF
-<VirtualHost *:80>
-    ServerName antfarm.online
-    ServerAlias www.antfarm.online
-    DocumentRoot /var/www/antfarm.online
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-EOF
-
-# เปิดใช้งาน Virtual Host
-sudo a2ensite antfarm.online
-sudo systemctl reload apache2
-
-# สร้างไฟล์ทดสอบ PHP
-tee /var/www/antfarm.online/info.php > /dev/null <<EOF
+# สร้างไฟล์ทดสอบ PHP ในไดเร็กทอรีเริ่มต้น
+tee /var/www/html/info.php > /dev/null <<EOF
 <?php
 phpinfo();
 ?>
 EOF
 
-# ทดสอบการติดตั้ง PHP โดยเข้าถึง URL http://antfarm.online/info.php
-echo "กรุณาทดสอบการติดตั้ง PHP โดยเข้าถึง URL: http://antfarm.online/info.php"
+# ทดสอบการติดตั้ง PHP โดยเข้าถึง URL http://192.168.56.103/info.php
+echo "กรุณาทดสอบการติดตั้ง PHP โดยเข้าถึง URL: http://192.168.56.103/info.php"
 
 # ลบไฟล์ทดสอบ PHP เพื่อความปลอดภัย
-sudo rm /var/www/antfarm.online/info.php
+sudo rm /var/www/html/info.php
 
 # สร้างฐานข้อมูลและผู้ใช้ใหม่ใน MySQL
 sudo mysql -u root -pSbkcrona -e "CREATE DATABASE example_database;"
@@ -98,8 +79,8 @@ sudo mysql -u root -pSbkcrona -e "CREATE USER 'example_user'@'localhost' IDENTIF
 sudo mysql -u root -pSbkcrona -e "GRANT ALL PRIVILEGES ON example_database.* TO 'example_user'@'localhost' WITH GRANT OPTION;"
 sudo mysql -u root -pSbkcrona -e "FLUSH PRIVILEGES;"
 
-# สร้างสคริปต์ PHP เพื่อทดสอบการเชื่อมต่อฐานข้อมูล
-tee /var/www/antfarm.online/todo_list.php > /dev/null <<EOF
+# สร้างสคริปต์ PHP เพื่อทดสอบการเชื่อมต่อฐานข้อมูลในไดเร็กทอรีเริ่มต้น
+tee /var/www/html/todo_list.php > /dev/null <<EOF
 <?php
 \$user = "example_user";
 \$password = "password";
@@ -120,5 +101,5 @@ try {
 ?>
 EOF
 
-# ทดสอบการเชื่อมต่อฐานข้อมูลโดยเข้าถึง URL http://antfarm.online/todo_list.php
-echo "กรุณาทดสอบการเชื่อมต่อฐานข้อมูลโดยเข้าถึง URL: http://antfarm.online/todo_list.php"
+# ทดสอบการเชื่อมต่อฐานข้อมูลโดยเข้าถึง URL http://192.168.56.103/todo_list.php
+echo "กรุณาทดสอบการเชื่อมต่อฐานข้อมูลโดยเข้าถึง URL: http://192.168.56.103/todo_list.php"
