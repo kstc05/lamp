@@ -18,7 +18,7 @@ set timeout 10
 spawn sudo mysql_secure_installation
 
 expect "Enter password for user root:"
-send "Sbkcrona\r"
+send "********\r"
 
 expect "VALIDATE PASSWORD COMPONENT can be used to test passwords and improve security. It checks the strength of password and allows the users to set only those passwords which are secure enough. Would you like to setup VALIDATE PASSWORD component?"
 send "n\r"
@@ -48,7 +48,7 @@ sudo expect mysql_secure_installation.expect
 rm mysql_secure_installation.expect
 
 # เปลี่ยนการตั้งค่าการรับรองความถูกต้องของ root เป็น mysql_native_password
-sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Sbkcrona'; FLUSH PRIVILEGES;"
+sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '********'; FLUSH PRIVILEGES;"
 
 # ติดตั้ง PHP และโมดูลที่จำเป็น
 sudo apt install -y php libapache2-mod-php php-mysql
